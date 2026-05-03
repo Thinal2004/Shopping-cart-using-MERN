@@ -1,25 +1,43 @@
-import React from 'react';
+import React, {useContext}from 'react';
+import { Link } from 'react-router-dom';
+import { CartContext } from '../context/CartContext';
 
 const Navbar = () => {
+  // Pull the cartItems
+  const { cartItems } = useContext(CartContext);
+  
+  // Calculate total number of items
+  const totalItems = cartItems.reduce((total, item) => total + item.qty, 0);
+
   return (
-    <nav className="flex justify-between items-center py-5 border-b border-gray-100">
-      <div className="text-2xl font-bold text-[#0a7a35]">FreshMarket</div>
+    <nav className="sticky top-0 z-50 bg-white flex justify-between items-center py-5 border-b border-gray-100">
+      <Link to="/" className="text-2xl font-bold text-[#0a7a35] hover:opacity-80 transition">
+        FreshMarket
+      </Link>
       <ul className="hidden md:flex list-none gap-8 text-gray-500 font-medium">
-        <li className="text-[#0a7a35] border-b-2 border-[#0a7a35] pb-1 cursor-pointer">Vegetables</li>
-        <li className="hover:text-gray-800 cursor-pointer transition">Fruits</li>
-        <li className="hover:text-gray-800 cursor-pointer transition">Cakes</li>
-        <li className="hover:text-gray-800 cursor-pointer transition">Biscuits</li>
+        <li>
+          <a href="/#vegetables" className="hover:text-[#0a7a35] cursor-pointer transition">Vegetables</a>
+        </li>
+        <li>
+          <a href="/#fruits" className="hover:text-[#0a7a35] cursor-pointer transition">Fruits</a>
+        </li>
+        <li>
+          <a href="/#cakes" className="hover:text-[#0a7a35] cursor-pointer transition">Cakes</a>
+        </li>
+        <li>
+          <a href="/#cakes" className="hover:text-[#0a7a35] cursor-pointer transition">Biscuits</a>
+        </li>
       </ul>
       <div className="flex items-center gap-4">
-        <div className="hidden md:flex bg-gray-100 rounded-full px-4 py-2 items-center">
-          <span className="text-gray-500">🔍</span>
-          <input 
-            type="text" 
-            placeholder="Search fresh food..." 
-            className="bg-transparent border-none outline-none ml-2 w-40"
-          />
-        </div>
-        <span className="text-xl cursor-pointer hover:text-[#0a7a35] transition">🛒</span>
+        
+        <Link to="/cart" className="relative text-xl cursor-pointer hover:text-[#0a7a35] transition pr-2">
+          🛒
+          {totalItems > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center">
+              {totalItems}
+            </span>
+          )}
+        </Link>
         <span className="text-xl cursor-pointer hover:text-[#0a7a35] transition">👤</span>
       </div>
     </nav>

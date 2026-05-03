@@ -1,13 +1,22 @@
 import React from 'react';
-// Make sure this path matches where you saved your HomePage file!
-// If it's just in the src folder, use: import HomePage from './HomePage';
 import HomePage from './pages/HomePage'; 
+import CartPage from './pages/CartPage';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { CartProvider } from './context/CartContext';
 
 const App = () => {
   return (
-    <div className="bg-white min-h-screen">
-      <HomePage />
-    </div>
+    <CartProvider>
+    <Router>
+      <div className="bg-white min-h-screen">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          
+          <Route path="/cart" element={<CartPage />} />
+        </Routes>
+      </div>
+    </Router>
+    </CartProvider>
   );
 };
 
