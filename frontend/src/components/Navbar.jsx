@@ -1,11 +1,14 @@
 import React, {useContext}from 'react';
 import { Link } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
+import { AuthContext } from '../context/AuthContext';
 
 const Navbar = () => {
   // Pull the cartItems
   const { cartItems } = useContext(CartContext);
   
+  // Pull in the current user and the logout function
+  const { currentUser, logout } = useContext(AuthContext);
   // Calculate total number of items
   const totalItems = cartItems.reduce((total, item) => total + item.qty, 0);
 
@@ -38,7 +41,24 @@ const Navbar = () => {
             </span>
           )}
         </Link>
-        <span className="text-xl cursor-pointer hover:text-[#0a7a35] transition">👤</span>
+
+        {currentUser ? (
+          <div className="flex items-center gap-3 pl-2">
+            {/* Split the displayName to just show their First Name */}
+            <span className="text-sm font-semibold text-gray-700 hidden sm:block">
+              Hi, {currentUser.displayName?.split(' ')[0]}
+            </span>
+            <button 
+              onClick={logout}
+              className="text-xs font-bold text-gray-400 hover:text-red-500 transition px-2 py-1 rounded border border-transparent hover:border-red-100 hover:bg-red-50"
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <Link to="/login" className="text-xl pl-2 cursor-pointer hover:text-[#0a7a35] transition">👤</Link>
+        )}
+
       </div>
     </nav>
   );
