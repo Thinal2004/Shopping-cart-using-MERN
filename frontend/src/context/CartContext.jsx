@@ -1,11 +1,37 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { AuthContext } from './AuthContext';
 
 // Create the Context 
 export const CartContext = createContext();
 
 // Create the Provider 
 export const CartProvider = ({ children }) => {
+  const { currentUser } = useContext(AuthContext);
   const [cartItems, setCartItems] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Whenever the user changes, load their specific cart
+  useEffect(() => {
+    if (currentUser) {
+      const savedCart = localStorage.getItem(`cart_${currentUser.uid}`);
+      if (savedCart) {
+        setCartItems(JSON.parse(savedCart));
+      } else {
+        setCartItems([]);
+      }
+    } else {
+      setCartItems([]);
+    }
+    setIsLoaded(true); 
+  }, [currentUser]);
+
+  // Whenever the cart changes, save it to their specific storage
+  useEffect(() => {
+    // Only save if someone is actually logged in
+    if (isLoaded && currentUser) {
+      localStorage.setItem(`cart_${currentUser.uid}`, JSON.stringify(cartItems));
+    }
+  }, [cartItems, currentUser]);
 
   // ADD OR INCREASE ITEM
   const addToCart = (product) => {
@@ -38,8 +64,12 @@ export const CartProvider = ({ children }) => {
     setCartItems((prevItems) => prevItems.filter((item) => item._id !== productId));
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, decreaseQty, removeFromCart }}>
+    <CartContext.Provider value={{ cartItems, addToCart, decreaseQty, removeFromCart, clearCart }}>
       {children}
     </CartContext.Provider>
   );

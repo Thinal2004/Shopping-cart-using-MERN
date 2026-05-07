@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import LoginPage from './pages/LoginPage';
 import { AuthProvider } from './context/AuthContext';
+import RegisterPage from './pages/RegisterPage';
 
 const App = () => {
   return (
@@ -18,6 +19,8 @@ const App = () => {
           <Route path="/cart" element={<CartPage />} />
 
           <Route path="/login" element={<LoginPage />} />
+
+          <Route path="/register" element={<RegisterPage />} />
         </Routes>
       </div>
     </Router>

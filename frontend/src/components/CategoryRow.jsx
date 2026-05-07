@@ -1,8 +1,24 @@
 import React, { useContext } from 'react'; 
 import { CartContext } from '../context/CartContext';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+
 
 const CategoryRow = ({ title, products }) => {
   const { addToCart } = useContext(CartContext);
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleAddToCart = (product) => {
+    if (!currentUser) {
+      alert("Please log in or create an account to add items to your cart!");
+      navigate('/login'); 
+      return; 
+    }
+    
+    // If they ARE logged in, proceed as normal
+    addToCart(product);
+  };
   
   return (
     <section className="mb-12">
@@ -21,7 +37,7 @@ const CategoryRow = ({ title, products }) => {
                 className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
               />
               <button 
-                onClick={() => addToCart(product)}
+                onClick={() => handleAddToCart(product)}
                 className="absolute bottom-3 right-3 bg-[#0a7a35] hover:bg-green-800 text-white rounded-full w-9 h-9 flex items-center justify-center text-xl transition shadow-md"
               >
                 +

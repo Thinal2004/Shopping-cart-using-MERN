@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react'; 
+import { CartContext } from '../context/CartContext';
 
 const OrderSummary = ({totalItems, total }) => {
+
+  const { clearCart } = useContext(CartContext);
+
+  const handleCheckout = () => {
+    alert("Success! Your order has been placed.");
+    clearCart();
+  };
+
   return (
     <div className="w-full lg:w-[380px]">
       
@@ -22,7 +31,9 @@ const OrderSummary = ({totalItems, total }) => {
           </div>
         </div>
 
-        <button className="w-full bg-[#0a7a35] hover:bg-green-800 text-white py-3.5 rounded-xl font-bold transition shadow-md">
+        <button
+          onClick={handleCheckout}
+          className="w-full bg-[#0a7a35] hover:bg-green-800 text-white py-3.5 rounded-xl font-bold transition shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed">
           Proceed to Checkout
         </button>
 

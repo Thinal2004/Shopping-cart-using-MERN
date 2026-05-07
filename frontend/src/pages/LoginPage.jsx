@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { signInWithPopup } from 'firebase/auth';
+import { signInWithPopup , signInWithEmailAndPassword} from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
 import Navbar from '../components/Navbar';
 
 const LoginPage = () => {
   const [error, setError] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
@@ -21,6 +23,21 @@ const LoginPage = () => {
       navigate('/');
     } catch (err) {
       setError('Failed to sign in with Google. Please try again.');
+      console.error(err);
+    }
+  };
+
+  const handleEmailLogin = async (e) => {
+    e.preventDefault(); // Prevents the page from reloading when you hit submit
+    try {
+      setError('');
+      // Tell Firebase to check this email and password
+      await signInWithEmailAndPassword(auth, email, password);
+      console.log("Success! Logged in with email.");
+      navigate('/');
+    } catch (err) {
+      // Firebase will throw an error if the password is wrong or user doesn't exist
+      setError('Invalid email or password. Please try again.');
       console.error(err);
     }
   };
@@ -51,20 +68,37 @@ const LoginPage = () => {
             <div className="flex-grow border-t border-gray-200"></div>
           </div>
 
-          {/* Standard Email/Password form (UI only for now) */}
-          <div className="space-y-4">
+          {/* Standard Email/Password form */}
+          <form onSubmit={handleEmailLogin} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-              <input type="email" placeholder="you@example.com" className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:border-[#0a7a35] focus:ring-1 focus:ring-[#0a7a35] transition" />
+              <input 
+                type="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)} // Updates the email state
+                required
+                placeholder="you@example.com" 
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:border-[#0a7a35] focus:ring-1 focus:ring-[#0a7a35] transition" 
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input type="password" placeholder="••••••••" className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:border-[#0a7a35] focus:ring-1 focus:ring-[#0a7a35] transition" />
+              <input 
+                type="password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)} // Updates the password state
+                required
+                placeholder="••••••••" 
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:border-[#0a7a35] focus:ring-1 focus:ring-[#0a7a35] transition" 
+              />
             </div>
-            <button className="w-full bg-[#0a7a35] hover:bg-green-800 text-white font-bold py-3 rounded-xl transition duration-200">
+            <button 
+              type="submit"
+              className="w-full bg-[#0a7a35] hover:bg-green-800 text-white font-bold py-3 rounded-xl transition duration-200"
+            >
               Sign In
             </button>
-          </div>
+          </form>
 
           <p className="text-center text-sm text-gray-500 mt-6">
             Don't have an account? <Link to="/register" className="text-[#0a7a35] font-semibold hover:underline">Sign up</Link>
