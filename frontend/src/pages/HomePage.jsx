@@ -15,7 +15,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/products');
+        const response = await axios.get('https://shopping-cart-using-mern.vercel.app/api/products');
         
         // Save the database array into our React state
         setProducts(response.data);
