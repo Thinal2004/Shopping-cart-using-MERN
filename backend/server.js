@@ -3,8 +3,8 @@ dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
-import connectDB from './config/db.js'; // Notice the .js extension!
-import productRoutes from './routes/productRoutes.js'; // Notice the .js extension!
+import connectDB from './config/db.js';
+import productRoutes from './routes/productRoutes.js';
 import { protect } from './middleware/authMiddleware.js';
 
 connectDB();
@@ -35,3 +35,5 @@ app.get('/api/secure-profile', protect, (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+export default app;
