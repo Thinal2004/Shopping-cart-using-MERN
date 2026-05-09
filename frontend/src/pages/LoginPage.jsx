@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { signInWithPopup , signInWithEmailAndPassword} from 'firebase/auth';
+import { signInWithRedirect , signInWithEmailAndPassword} from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
 import Navbar from '../components/Navbar';
 
@@ -10,19 +10,12 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = () => {
     try {
       setError('');
-      // This single line triggers the Google pop-up!
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      
-      console.log("Success! Logged in as:", user.displayName);
-      
-      // Send the user back to the home page after successful login
-      navigate('/');
+      signInWithRedirect(auth, googleProvider);
     } catch (err) {
-      setError('Failed to sign in with Google. Please try again.');
+      setError('Failed to initiate Google sign-in.');
       console.error(err);
     }
   };
