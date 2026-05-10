@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { signInWithRedirect , signInWithEmailAndPassword} from 'firebase/auth';
+import { signInWithPopup , signInWithEmailAndPassword} from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
 import Navbar from '../components/Navbar';
 
@@ -10,12 +10,14 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     try {
       setError('');
-      signInWithRedirect(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log("Success! Logged in as:", result.user.displayName);
+      navigate('/');
     } catch (err) {
-      setError('Failed to initiate Google sign-in.');
+      setError('Failed to sign in with Google. Please try again.');
       console.error(err);
     }
   };
@@ -38,7 +40,6 @@ const LoginPage = () => {
   return (
     <div className="max-w-[1200px] mx-auto px-5 font-sans text-gray-800 pb-20">
       <Navbar />
-      
       <div className="flex justify-center items-center mt-20">
         <div className="bg-white border border-gray-100 shadow-xl rounded-3xl p-10 w-full max-w-md">
           <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">Welcome Back</h2>
